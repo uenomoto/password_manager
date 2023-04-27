@@ -17,6 +17,8 @@ while true; do
   read mode
 
   if [ "$mode" = "Add Password" ]; then
+    gpg -d -o $preservation_file $encrypted_file 2> /dev/null
+
     echo "サービス名を入力してください："
     read service_name
     echo "ユーザー名を入力してください："
@@ -25,15 +27,16 @@ while true; do
     read password
 
     echo "${service_name}:${username}:${password}" >> $preservation_file
-    echo "パスワードの追加は成功しました。"
-
     # ファイルを暗号化し、復号化されたファイルを削除
-    gpg --encrypt --recipient your@email.address $preservation_file
+    gpg -e -r "m.u19953001@gmail.com" -o $encrypted_file $preservation_file
     rm $preservation_file
+    echo "パスワードの追加は成功しました。"
 
   elif [ "$mode" = "Get Password" ]; then
     echo "サービス名を入力してください："
     read service_name
+
+    gpg -d -o $preservation_file $encrypted_file
     result=$(grep "^$service_name:" $preservation_file)
 
     if [ -z "$result" ]; then
@@ -45,10 +48,10 @@ while true; do
       password=$(grep "^$service_name:" $preservation_file | cut -f 3 -d ":")
       echo "パスワード：$password"
     fi
+    rm $preservation_file
 
   elif [ "$mode" = "Exit" ]; then
     echo "Thank you!"
-    rm $preservation_file
     break
 
   else
