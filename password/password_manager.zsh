@@ -28,7 +28,7 @@ while true; do
 
     echo "${service_name}:${username}:${password}" >> $preservation_file
     # ファイルを暗号化し、復号化されたファイルを削除
-    gpg -e -r "m.u19953001@gmail.com" -o $encrypted_file $preservation_file
+    gpg -e -r $MY_EMAIL -o $encrypted_file $preservation_file
     rm $preservation_file
     echo "パスワードの追加は成功しました。"
 
