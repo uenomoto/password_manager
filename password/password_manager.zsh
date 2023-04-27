@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+source .env
+
 echo "パスワードマネージャーへようこそ！"
 preservation_file="passwords.txt"
 encrypted_file="passwords.gpg"
