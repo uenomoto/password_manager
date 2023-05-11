@@ -6,13 +6,11 @@ echo "パスワードマネージャーへようこそ！"
 preservation_file="passwords.txt"
 encrypted_file="passwords.gpg"
 
-# 復号化されたファイルが存在する場合は削除
-if [ -f $preservation_file ]; then
-    rm $preservation_file
+# 暗号化されたファイルが存在するかチェック
+if [ ! -f $encrypted_file ]; then
+  echo "暗号化されたファイルが存在しません。"
+  exit 1
 fi
-
-# 暗号化されたファイルを復号化
-gpg --output $preservation_file --decrypt $encrypted_file
 
 while true; do
   echo "次の選択肢から入力してください(Add Password/Get Password/Exit): "
@@ -37,8 +35,7 @@ while true; do
   elif [ "$mode" = "Get Password" ]; then
     echo "サービス名を入力してください："
     read service_name
-
-    gpg -d -o $preservation_file $encrypted_file
+    gpg -d -o $preservation_file $encrypted_file 2> /dev/null
     result=$(grep "^$service_name:" $preservation_file)
 
     if [ -z "$result" ]; then
@@ -60,3 +57,4 @@ while true; do
     echo "入力が間違えています。Add Password/Get Password/Exit から入力してください。"
   fi
 done
+

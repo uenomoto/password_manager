@@ -1,15 +1,32 @@
-FROM ubuntu:22.04
+FROM ubuntu:latest
+
 RUN yes | unminimize
 RUN apt-get update && \
-  apt-get install -y locales neovim tmux less zsh curl git gnupg
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata 
-RUN locale-gen ja_JP.UTF-8
+  apt-get install -y \
+  locales \
+  neovim \
+  less \
+  zsh \
+  curl \
+  git \
+  gnupg && \
+  chsh -s /bin/zsh && \
+  locale-gen ja_JP.UTF-8
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
 ENV LANG=ja_JP.UTF-8
 ENV TZ=Asia/Tokyo
-RUN chsh -s /bin/zsh
-RUN touch /root/.zshrc
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
 WORKDIR /app
+
+# docker build -t passmane
+# docker run -it -v $(pwd):/app passmane
+# docker exec -it コンテナID zsh
+# パスワードはpassword
+
+
+# これでキーを確認
+# gpg --list-keys
+# gpg --list-secret-keys
+# キー作成
+# gpg --gen-key
+# gpg -e -r test@.com passwords.txt
+# gpg -d passwords.txt.gpg
